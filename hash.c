@@ -47,8 +47,7 @@ Hash create(int hsize, Hashdup dup, Hashfree free) {
 void *lookup(Hash hp, char *key) {
     Hnode np;
 
-    np = gethnode(hp, key);
-    if (np == NULL)
+    if ((np = gethnode(hp, key)) == NULL)
         return NULL;
 
     return np->value;
