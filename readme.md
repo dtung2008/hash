@@ -6,13 +6,13 @@ hash.c and hash.h provide functions for using hash tables in C. It only supports
 
 ## How to use the package
 
-### 1. Create a Hash type
+### 1. Create a has table
 
 Create an instance of hash with
 
     Hash create(int hash_size, Hashdup dupfunc, Hashfree freefunc)
     
-, where hash_size is a hash index size. dupfunc is the duplicate function that provide a duplicate with malloc memory for date. freefunc is the extra free function for the memory user malloc themselves. (See how to write dupfunc and freefunc for more information.) It returns a hash pointer if success, NULL if fail.
+, where hash_size is a hash index size. dupfunc is the function provides a duplication with malloc memory of date. freefunc is the extra free function for the dynamic memory can not be free from pointer to user's data. (See how to write dupfunc and freefunc for more information.) It returns a hash pointer if success, NULL if fail.
 
 ### 2. Use lookup to check entry of a hash
 
@@ -58,19 +58,19 @@ Use
 
     Hnode firsthnode(Hash hash)
 
-to get the pointer of the first Hnode of the hash. Hnode is a pointer the the struture contains key and value.
+to get the pointer of the first Hnode of the hash. Hnode is a pointer to the struture contains key and value.
 
 Use
 
     Hnode nexthnode(Hash hash)
 
-to get the pointer of the next Hnode. It return NULL if it reaches the end of the hash.
+to get the pointer of the next Hnode. It return NULL if it reaches the end of the hash table.
 
 ### 8. How to write a dupfunc
 
     void *dupfunc(void *data) 
     
-duplicate a copy of your data. We recomend you write it as concrete type and type case to Hashcp when calling. The input must be a point to your data, or just the data if data is an array. For example to copy an int type, you write
+duplicate a copy of your data. We recomend you write it as concrete type and type case to Hashdup when using. The input must be a pointer to your data, or just the array if data is an array. For example to copy an int type, you write
 
     int *intdup(int *i) {
         int *p;
@@ -80,16 +80,22 @@ duplicate a copy of your data. We recomend you write it as concrete type and typ
             *p = *i;
         return p;
     }
-To copy an (char *) type, you can just use strdup as cpfunc.
+To copy an (char *) type, you just use the standard strdup as dupfunc.
 
-I have built a version of intdup in the package, strdup is a function standard library. You need to build other dupfunc by youselves.
+I have built a version of intdup in the package, strdup is a function in the standard library. You need to build other dupfunc by yourselves.
 
 ### 9. How to write a freefunc
 
-You need to write a free function for those dynamic memory not removable by freeing the return pointer of lookup. If there is no such memory, just pass NULL to freefunc. Package will free the nearest dynamic memory. For examples, you just pass NULL for int and (char *) data.
+Users need to write a free function for those dynamic memory not freeable through pointer to user's data. If there is no such memory, just pass NULL to freefunc. For examples, you just pass NULL for int and (char *) data.
 
 ## Example codes
 
-test.c shows how to use hash with string (char array) value, and hash with int value.
+test.c shows how to use hash with string (char array) and int value. Check it with
 
-dup.c show how to use hash with int value to find the duplicate lines from standard input.
+    gcc test.c hash.c
+    ./a.out
+
+dup.c show how to use hash with int value to find the duplicated lines from standard input. Check it with
+
+    gcc dup.c hash.c
+    ./a.out < hash.c
