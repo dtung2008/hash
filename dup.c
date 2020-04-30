@@ -8,8 +8,8 @@ see readme.md for more information.
 #include <stdlib.h>
 #include "hash.h"
 
-#define MAXLINE 1000
-#define HASHSIZE 100
+#define MAXLINE 512 
+#define HASHSIZE 1000
 
 int main() {
     char s[MAXLINE];

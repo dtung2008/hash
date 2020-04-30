@@ -6,13 +6,15 @@ hash.c and hash.h provide functions for using hash tables in C. It only supports
 
 ## How to use the package
 
-### 1. Create a has table
+### 1. Create a hash table
 
 Create an instance of hash with
 
     Hash create(int hash_size, Hashdup dupfunc, Hashfree freefunc)
     
 , where hash_size is a hash index size. dupfunc is the function provides a duplication with malloc memory of date. freefunc is the extra free function for the dynamic memory can not be free from pointer to user's data. (See how to write dupfunc and freefunc for more information.) It returns a hash pointer if success, NULL if fail.
+
+For best performance, used entries should be 80% of hash_size.
 
 ### 2. Use lookup to check entry of a hash
 
@@ -26,9 +28,9 @@ to check if the hash has the key in the table. If yes, the function returns a po
 
 Use 
     
-    void insert(Hash hash, char *key, void *value)
+    void *insert(Hash hash, char *key, void *value)
 
-value point to your data. The dupfunc and freefunc you provide will be used to duplicate and free data. Package will free the nearest dynamic memory.  
+value point to your data. The dupfunc and freefunc you provide will be used to duplicate and free data. Package will free the nearest dynamic memory. If success it will return  pointer to the input value, otherwise it returns NULL.
 
 ### 4. Two ways to replace existing data, use insert or lookup
 
@@ -73,9 +75,7 @@ to get the pointer of the next Hnode. It return NULL if it reaches the end of th
 duplicate a copy of your data. We recomend you write it as concrete type and type case to Hashdup when using. The input must be a pointer to your data, or just the array if data is an array. For example to copy an int type, you write
 
     int *intdup(int *i) {
-        int *p;
-
-        p = malloc(sizeof(int));
+        int *p = malloc(sizeof(int));
         if (p != NULL)
             *p = *i;
         return p;
@@ -95,7 +95,12 @@ test.c shows how to use hash with string (char array) and int value. Check it wi
     gcc test.c hash.c
     ./a.out
 
-dup.c show how to use hash with int value to find the duplicated lines from standard input. Check it with
+record.c shows how to use hash with struct value. Check it with
+
+    gcc record.c hash.c
+    ./a.out
+
+dup.c shows how to use hash with int value to find the duplicated lines from standard input. Check it with
 
     gcc dup.c hash.c
     ./a.out < hash.c

@@ -175,9 +175,7 @@ void freeHash(Hash hp) {
 }
 
 int *intdup(int *i) {
-    int *p;
-
-    p = malloc(sizeof(int));
+    int *p = malloc(sizeof(int));
     if (p != NULL)
         *p = *i;
     return p;
